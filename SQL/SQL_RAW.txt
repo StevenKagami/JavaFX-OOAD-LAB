@@ -1,0 +1,152 @@
+create table Users(
+    UserId INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    UserName VARCHAR(255) NOT NULL,
+	UserPassword VARCHAR(255) NOT NULL,
+    UserAge INT NOT NULL,
+	UserRole VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE PCs(
+	PcId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+   	PcStatus VARCHAR(255) NOT NULL
+);	
+
+CREATE TABLE Jobs(
+	JobId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+   	UserId INT NOT NULL,
+	PcId INT NOT NULL,
+	JobStatus VARCHAR(255) NOT NULL,
+    FOREIGN KEY(UserId) REFERENCES Users (UserId) ON UPDATE CASCADE ON DELETE CASCADE,
+   	FOREIGN KEY(PcId) REFERENCES Pcs(PcId) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+CREATE TABLE BookPcs(
+	BookId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    PcId INT NOT NULL,
+   	UserId INT NOT NULL,
+	BookedDate DATE NOT NULL,
+   	FOREIGN KEY(UserId) REFERENCES Users (UserId) ON UPDATE CASCADE ON DELETE CASCADE,
+   	FOREIGN KEY(PcId) REFERENCES Pcs(PcId) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+CREATE TABLE Reports(
+	ReportId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	UserRole VARCHAR(255) NOT NULL,
+    PcId INT NOT NULL,
+   	ReportNote TEXT(255) NOT NULL,
+	ReportDate DATE NOT NULL,
+   	FOREIGN KEY(PcId) REFERENCES Pcs(PcId) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+CREATE TABLE TransactionHeaders(
+	TransactionId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+	StaffID INT NOT NULL,
+    StaffName VARCHAR(255) NOT NULL,
+	TransactionDate DATE NOT NULL,
+    FOREIGN KEY(StaffID) REFERENCES Users(UserId) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+CREATE TABLE TransactionDetails(
+	TransactionId INT NOT NULL,
+	PcId INT NOT NULL,
+    CustomerName VARCHAR(255) NOT NULL,
+	BookedTime DATE NOT NULL,
+   	PRIMARY KEY (TransactionId, PcId),
+   	FOREIGN KEY(TransactionId) REFERENCES TransactionHeaders(TransactionId) ON UPDATE CASCADE ON DELETE CASCADE,
+   	FOREIGN KEY(PcId) REFERENCES Pcs(PcId) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+
+INSERT INTO pcs (PcId, PcStatus) VALUES
+(1, 'Maintenance'),
+(2, 'Usable'),
+(3, 'Usable'),
+(4, 'Usable'),
+(5, 'Maintenance'),
+(6, 'Maintenance'),
+(7, 'Broken'),
+(8, 'Broken'),
+(9, 'Usable'),
+(10, 'Usable'),
+(11, 'Usable'),
+(12, 'Usable'),
+(13, 'Broken'),
+(14, 'Usable'),
+(15, 'Usable');
+
+
+INSERT INTO users (UserID, UserName,UserPassword, UserAge, UserRole) VALUES
+(1, 'Admin', 'Admin', 99, 'Admin'),
+(2, 'Technician', 'Technician', 99, 'Computer Technician'),
+(3, 'Technician2', 'Technician2', 99, 'Computer Technician'),
+(4, 'Operator', 'Operator', 99, 'Operator'),
+(5, 'Operator2', 'Operator2', 99, 'Operator'),
+(6, 'Customer', 'Customer', 99, 'Customer'),
+(7, 'howardd', 'howard123', 20, 'Customer'),
+(8, 'christian', 'christian123', 20, 'Customer'),
+(9, 'danesckarnadi', 'danesckarnadi', 43, 'Customer'),
+(10,'theodoric', 'theo123', 17, 'Customer');
+
+INSERT INTO bookpcs (BookId, BookedDate, PcId, UserId) VALUES
+(1, '2023-12-13', 2, 6),
+(2, '2023-12-13', 3, 7),
+(3, '2023-12-14', 14, 10),
+(4, '2023-12-14', 15, 10),
+(5, '2023-12-15', 10, 9),
+(6, '2023-12-15', 11, 9),
+(7, '2023-12-16', 3, 6),
+(8, '2023-12-16', 4, 7),
+(9, '2023-12-17', 9, 9),
+(10,'2023-12-17', 14, 7);
+
+INSERT INTO reports(ReportId, UserRole, PcId, ReportNote, ReportDate) VALUES 
+(1, 'Customer',1, 'The Pc Is Maintenance', '2023-12-13'),
+(2, 'Customer',1, 'The Pc Is Maintenance', '2023-12-13'),
+(3, 'Customer',7, 'The Pc Is Broken', '2023-12-14'),
+(4, 'Customer',5, 'The Pc Is Maintenance', '2023-12-14'),
+(5, 'Customer',8, 'The Pc Is Broken', '2023-12-14'),
+(6, 'Operator',5, 'The Pc Is Maintenance', '2023-12-15'),
+(7, 'Operator',7, 'The Pc Is Broken', '2023-12-15'),
+(8, 'Operator',5, 'The Pc Is Maintenance', '2023-12-15'),
+(9, 'Operator',7, 'The Pc Is Broken', '2023-12-16'),
+(10,'Operator',15, 'Pc nya dibook mulu mau ranked valo nih', '2023-12-20');
+
+INSERT INTO jobs(JobId, UserId, PcId, JobStatus) VALUES 
+(1,2,1,'UnComplete'),
+(2,2,5,'UnComplete'),
+(3,3,8,'UnComplete'),
+(4,3,13,'UnComplete'),
+(5,3,15,'Complete');
+
+
+INSERT INTO transactionheaders(TransactionId, StaffID, StaffName, TransactionDate) VALUES 
+(1,4,'Operator','2023-12-01'),
+(2,4,'Operator','2023-12-01'),
+(3,5,'Operator2','2023-12-02'),
+(4,5,'Operator2','2023-12-02'),
+(5,5,'Operator2','2023-12-03');
+
+
+INSERT INTO transactiondetails(TransactionId, PcId, CustomerName, BookedTime) VALUES 
+(1,2,'howardd','2023-11-25'),
+(1,3,'howardd','2023-11-25'),
+(1,4,'christian','2023-11-25'),
+(2,9,'danesckarnadi','2023-11-26'),
+(2,10,'howardd','2023-11-26'),
+(2,11,'howardd','2023-11-26'),
+(3,2,'howardd','2023-11-27'),
+(4,3,'theodoric','2023-11-28'),
+(4,4,'theodoric','2023-11-28'),
+(4,9,'theodoric','2023-11-28'),
+(4,10,'theodoric','2023-11-28'),
+(4,11,'theodoric','2023-11-28'),
+(5,2,'howardd','2023-11-29'),
+(5,3,'howardd','2023-11-29'),
+(5,4,'howardd','2023-11-29'),
+(5,9,'howardd','2023-11-29'),
+(5,10,'howardd','2023-11-29'),
+(5,11,'christian','2023-11-29'),
+(5,12,'howardd','2023-11-29');
+
+
+
